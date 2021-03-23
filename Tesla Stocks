@@ -1,0 +1,32 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+tesla_data=pd.read_csv("TSLA.csv")
+print(tesla_data)
+tesla_data.info()
+tesla_data.head()
+tesla_data.describe()
+tesla_data.shape
+tesla_data.isnull().sum()
+x = tesla_data[['High', 'Low', 'Open', 'Volume']].values
+y = tesla_data['Close'].values
+print(x)
+print(y)
+x_train,x_test,y_train,y_test=train_test_split(x,y, test_size=0.2,random_state=1)
+regressor = LinearRegression()
+regressor.fit(x_train, y_train)
+print(regressor.coef_)
+print(regressor.intercept_)
+predicted = regressor.predict(x_test)
+print(predicted)
+df2 = pd.DataFrame({'Actual': y_test.flatten(), 'Predicted' : predicted.flatten()})
+df2.head(25)
+import math
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test,predicted))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test,predicted))
+print('Root Mean Squared Error:', math.sqrt(metrics.mean_squared_error(y_test,predicted)))
+graph = df2.head(20)
+graph.plot(kind='bar')
